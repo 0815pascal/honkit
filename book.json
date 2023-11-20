@@ -1,0 +1,9 @@
+{
+  "plugins": ["honkit-plugin-api-documentation"],
+  "styles": {
+        "website": "styles/custom.css"
+    },
+    "variables": {
+        "baseUrl": "http://www.breadpitt.ch"
+    }
+  }

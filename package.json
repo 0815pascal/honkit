@@ -1,0 +1,27 @@
+{
+  "name": "honkit-api",
+  "version": "1.0.0",
+  "description": "",
+  "engines": {
+    "gitbook": ">=3.0.0-pre.0"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.8",
+    "honkit-plugin-api-documentation": "file:honkit-plugin-api-documentation",
+    "minimist": "^1.2.8",
+    "neo-async": "^2.6.2",
+    "source-map": "^0.6.1",
+    "uglify-js": "^3.17.4",
+    "wordwrap": "^1.0.0"
+  },
+  "scripts": {
+    "build": "honkit build",
+    "serve": "honkit serve"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "honkit": "^5.1.1"
+  }
+}
