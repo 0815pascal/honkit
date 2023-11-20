@@ -19,7 +19,7 @@
     "serve": "honkit serve"
   },
   "keywords": [],
-  "author": "",
+  "author": "Pascal Witzig",
   "license": "ISC",
   "devDependencies": {
     "honkit": "^5.1.1"
