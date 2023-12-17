@@ -2,6 +2,7 @@
   "name": "honkit-api",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "engines": {
     "gitbook": ">=3.0.0-pre.0"
   },
@@ -15,7 +16,8 @@
     "wordwrap": "^1.0.0"
   },
   "scripts": {
-    "build": "honkit build",
+    "reinstall-plugin": "rm -rf node_modules/honkit-plugin-api-documentation && npm install",
+    "build": "npm run reinstall-plugin && honkit build",
     "serve": "honkit serve"
   },
   "keywords": [],

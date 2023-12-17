@@ -1,77 +1,88 @@
-import { readFileSync, existsSync, writeFileSync, appendFileSync } from 'fs';
-import { registerHelper, helpers, SafeString, compile } from 'handlebars';
-import { join } from 'path';
+const fs = require('fs');
+const Handlebars = require('handlebars');
+const path = require('path');
+const {getMethod, getParameters, getResponses} = require('./helpers')
 
 // Read and compile the template
-const templateSource = readFileSync(join(__dirname, '_layouts', 'dynamic_template.hbs'), 'utf8');
+const templateSource = fs.readFileSync(path.join(__dirname, '_layouts', 'dynamic_template.hbs'), 'utf8');
 console.log("Template Source:", templateSource);
 
-registerHelper('renderProperties', function(properties, options) {
-  if (!properties || !Array.isArray(properties)) {
-    return ''; // Early exit
+Handlebars.registerHelper("renderProperties", function (properties, options) {
+  if (!properties || typeof properties !== "object") {
+    return ""; // Early exit if not an object
   }
 
-  console.log("Properties at current level:", properties);  // DEBUG: To see what properties are being processed
+  console.log("Properties at current level:", properties); // DEBUG
 
-  let output = '';
-  for (const element of properties) {
-    const property = element;
-    const requiredFlag = property.required ? '<span class="required">*</span>' : '';
+  let output = "";
+  for (const [key, property] of Object.entries(properties)) {
+    const requiredFlag = property.required
+      ? '<span class="required">*</span>'
+      : "";
 
-    if (property.type === 'object' && property.properties) {
-      output += `<details open=""><summary><span class="title">${property.title}${requiredFlag}</span><span class="type">${property.type}</span></summary>`;
+    if (property.type === "object" && property.properties) {
+      const maxLength = property?.maxLength ? `(${property?.maxLength})` : "";
+      output += `<details><summary><span class="title">${key}${requiredFlag}</span><span class="type">${property.type}${maxLength}</span></summary>`;
       output += `<div class="nested">`;
-      // Explicitly invoking the helper with the new context
-      output += helpers.renderProperties(property.properties, options);
+      output += Handlebars.helpers.renderProperties(
+        property.properties,
+        options
+      );
       output += `</div></details>`;
-    } else if (property.type.startsWith('array') && property.properties) {
-      output += `<details open=""><summary><span class="title">${property.title}${requiredFlag}</span><span class="type">${property.type}</span></summary>`;
+    } else if (
+      property.type === "array" &&
+      property.items &&
+      property.items.properties
+    ) {
+      const maxItems = property?.maxItems ? `(${property?.maxItems})` : "";
+      output += `<details><summary><span class="title">${key}${requiredFlag}</span><span class="type">${property.type}${maxItems}</span></summary>`;
       output += `<div class="nested">`;
-      // Only type of nested array properties should be rendered
-      output += `<div><p class="type">${property.properties.type}</p></div>`;
+      output += Handlebars.helpers.renderProperties(
+        property.items.properties,
+        options
+      );
       output += `</div></details>`;
     } else {
-      output += `<div><p class="type"><span class="title">${property.title}${requiredFlag}</span>${property.type}</p></div>`;
+      const maxLength = property?.maxLength ? `(${property?.maxLength})` : "";
+      output += `<div><p class="type"><span class="title">${key}${requiredFlag}</span>${property.type}${maxLength}</p></div>`;
     }
   }
 
-  return new SafeString(output);
+  return new Handlebars.SafeString(output);
 });
 
 
+const template = Handlebars.compile(templateSource);
 
-
-
-
-const template = compile(templateSource);
-
-export const book = {
+module.exports = {
+  book: {
   assets: './assets',
-  js: ['js/formHandler.js', ],
+  js: [ 'js/formHandler.js'],
   css: ['style.css']
-};
-export const hooks = {
-  "init": function () {
+},
+  hooks: {
+  "init": function() {
     // Paths for the new Markdown file and SUMMARY.md
-    const mdFilePath = join(this.resolve(''), 'jsonCreator.md');
-    const summaryPath = join(this.resolve(''), 'SUMMARY.md');
+    const mdFilePath = path.join(this.resolve(''), 'jsonCreator.md');
+    const summaryPath = path.join(this.resolve(''), 'SUMMARY.md');
 
     // Content for the new Markdown file
-    const mdContent = '# JSON Creator\n\n{% include "./honkit-plugin-api-documentation/_layouts/form.hbs" %}';
+    // const mdContent = '# JSON Creator\n\n{% include "./honkit-plugin-api-documentation/_layouts/form.hbs" %}';
+    const mdContent = '# JSON Creator\n\n{% include "./honkit-plugin-api-documentation/_layouts/swagger.hbs" %}';
     const summaryLink = '\n* [JSON Creator](jsonCreator.md)';
 
     // Check if the Markdown file already exists
-    if (!existsSync(mdFilePath)) {
-      writeFileSync(mdFilePath, mdContent);
+    if (!fs.existsSync(mdFilePath)) {
+      fs.writeFileSync(mdFilePath, mdContent);
     }
 
     // Check if the link is already in SUMMARY.md
-    const summaryContent = readFileSync(summaryPath, 'utf-8');
+    const summaryContent = fs.readFileSync(summaryPath, 'utf-8');
     if (!summaryContent.includes(summaryLink.trim())) {
-      appendFileSync(summaryPath, summaryLink);
+      fs.appendFileSync(summaryPath, summaryLink);
     }
   },
-  'page:before': async function (page) {
+  'page:before': async function(page) {
     const markerStart = '<!-- DYNAMIC_TEMPLATE_START -->';
     const markerEnd = '<!-- DYNAMIC_TEMPLATE_END -->';
     let content = page.content;
@@ -97,25 +108,28 @@ export const hooks = {
         break;
       }
 
-      const dynamicContent = template({
-        title: data.title,
-        method: data.method,
-        baseUrl: data.baseUrl,
-        path: data.path,
-        apiTitle: data.apiTitle,
-        description: data.description,
-        paramName: data.paramName,
-        required: data.required,
-        type: data.type,
-        paramDescription: data.paramDescription,
-        responses: data.responses // Assume this is an array of objects
-      });
+      const parameters = getParameters(data, "/{input}");
+      const responses = getResponses(data, "/{input}");
+      const paramName = `${parameters?.name}`;
 
+      const dynamicContent = template({
+        apiTitle: data?.info?.title,
+        method: getMethod(data, "/{input}"),
+        baseUrl: data.schemes[0] + "://" + data?.host + data?.basePath,
+        path: parameters?.name && `/{${parameters?.name}}`,
+        description: data?.info?.description,
+        paramName: paramName,
+        required: parameters?.required ? "*" : "",
+        type: parameters?.type,
+        paramDescription: parameters?.maxLength ? `max. length: ${parameters?.maxLength }` : "--",
+        responses: data.responses ?? responses, // Assume this is an array of objects
+      });
       content = beforeMarker + dynamicContent + afterMarker;
     }
 
     page.content = content;
     return page;
   }
+},
+  filters: {}
 };
-export const filters = {};

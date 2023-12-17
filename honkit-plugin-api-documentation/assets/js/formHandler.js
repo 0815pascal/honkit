@@ -161,7 +161,8 @@ document.addEventListener('DOMContentLoaded', function() {
     addResponseButton?.addEventListener('click', addResponse);
 
     // Function to handle form submission
-    form.onsubmit = function(event) {
+    if (form) {
+      form.onsubmit = function (event) {
         event.preventDefault();
 
         const formData = new FormData(form);
@@ -169,5 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Display the generated JSON
         jsonOutput.textContent = JSON.stringify(data, null, 2);
-    };
+      };
+    }
+
 });
