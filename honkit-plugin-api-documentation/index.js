@@ -22,34 +22,35 @@ Handlebars.registerHelper("renderProperties", function (properties, options) {
 
     if (property.type === "object" && property.properties) {
       const maxLength = property?.maxLength ? `(${property?.maxLength})` : "";
-      output += `<details><summary><span class="title">${key}${requiredFlag}</span><span class="type">${property.type}${maxLength}</span></summary>`;
-      output += `<div class="nested">`;
+      output += `<details>\n<summary>\n<span class="title">${key}${requiredFlag}</span>\n<span class="type">${property.type}${maxLength}</span></summary>`;
+      output += `<div class="nested">\n`;
       output += Handlebars.helpers.renderProperties(
         property.properties,
         options
       );
-      output += `</div></details>`;
+      output += `\n</div></details>\n`;
     } else if (
       property.type === "array" &&
       property.items &&
       property.items.properties
     ) {
       const maxItems = property?.maxItems ? `(${property?.maxItems})` : "";
-      output += `<details><summary><span class="title">${key}${requiredFlag}</span><span class="type">${property.type}${maxItems}</span></summary>`;
-      output += `<div class="nested">`;
+      output += `<details>\n<summary>\n<span class="title">${key}${requiredFlag}</span>\n<span class="type">${property.type}${maxItems}</span></summary>`;
+      output += `<div class="nested">\n`;
       output += Handlebars.helpers.renderProperties(
         property.items.properties,
         options
       );
-      output += `</div></details>`;
+      output += `\n</div></details>\n`;
     } else {
       const maxLength = property?.maxLength ? `(${property?.maxLength})` : "";
-      output += `<div><p class="type"><span class="title">${key}${requiredFlag}</span>${property.type}${maxLength}</p></div>`;
+      output += `<div>\n<p class="type">\n<span class="title">${key}${requiredFlag}</span>${property.type}${maxLength}</p></div>`;
     }
   }
 
   return new Handlebars.SafeString(output);
 });
+
 
 
 const template = Handlebars.compile(templateSource);
@@ -62,24 +63,6 @@ module.exports = {
 },
   hooks: {
   "init": function() {
-    // Paths for the new Markdown file and SUMMARY.md
-    const mdFilePath = path.join(this.resolve(''), 'jsonCreator.md');
-    const summaryPath = path.join(this.resolve(''), 'SUMMARY.md');
-
-    // Content for the new Markdown file
-    const mdContent = '# JSON Creator\n\n{% include "./honkit-plugin-api-documentation/_layouts/swagger.hbs" %}';
-    const summaryLink = '\n* [JSON Creator](jsonCreator.md)';
-
-    // Check if the Markdown file already exists
-    if (!fs.existsSync(mdFilePath)) {
-      fs.writeFileSync(mdFilePath, mdContent);
-    }
-
-    // Check if the link is already in SUMMARY.md
-    const summaryContent = fs.readFileSync(summaryPath, 'utf-8');
-    if (!summaryContent.includes(summaryLink.trim())) {
-      fs.appendFileSync(summaryPath, summaryLink);
-    }
   },
   'page:before': async function(page) {
     const markerStart = '<!-- DYNAMIC_TEMPLATE_START -->';
