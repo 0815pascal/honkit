@@ -67,7 +67,6 @@ module.exports = {
     const summaryPath = path.join(this.resolve(''), 'SUMMARY.md');
 
     // Content for the new Markdown file
-    // const mdContent = '# JSON Creator\n\n{% include "./honkit-plugin-api-documentation/_layouts/form.hbs" %}';
     const mdContent = '# JSON Creator\n\n{% include "./honkit-plugin-api-documentation/_layouts/swagger.hbs" %}';
     const summaryLink = '\n* [JSON Creator](jsonCreator.md)';
 
