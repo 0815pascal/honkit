@@ -15,24 +15,32 @@ function getNonEmptyObject(obj) {
 }
 
 function getMethod(data, path) {
-  if (!data || !data.paths) {
-    return data; // or a default value, or throw an error, as appropriate
+  if (typeof data !== "object" || data === null) {
+    throw new Error("data is not an object");
+  }
+
+  if (typeof path !== "string") {
+    throw new Error("Path must be a string");
+  }
+
+  if (!data?.paths) {
+    return data;
   }
 
   const pathData = data.paths[path];
   if (!pathData) {
-    return null; // or a default value, or throw an error
+    return null;
   }
 
-  const keys = Object.keys(pathData);
-  if (keys.length === 0) {
-    return null; // or a default value, or throw an error
+  const key = Object.keys(pathData).find((key) => pathData[key]);
+  if (!key) {
+    return null;
   }
-  return keys[0];
+  return key;
 }
 
 function getParameters(data, path) {
-  if (!data || !data.paths) {
+  if (!data?.paths) {
     return data; // or a default value, or throw an error, as appropriate
   }
 
@@ -89,7 +97,7 @@ function transformObject(obj) {
 }
 
 function getResponses(data, path) {
-  if (!data || !data.paths) {
+  if (!data?.paths) {
     return data; // or a default value, or throw an error, as appropriate
   }
 
@@ -109,5 +117,5 @@ function getResponses(data, path) {
 module.exports = {
   getMethod,
   getParameters,
-  getResponses
+  getResponses,
 };
