@@ -1,4 +1,3 @@
 # Summary
 
-* [Introduction](README.md)
-* [JSON Creator](jsonCreator.md)
+- [Introduction](README.md)
