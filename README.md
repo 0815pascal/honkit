@@ -1,3 +1,7 @@
+---
+description: Convention
+---
+
 # Test
 
 Your markdown content here.
@@ -53,7 +57,8 @@ Your markdown content here.
                   "type": "object",
                   "properties": {
                     "QUANTITY": {
-                      "type": "number"
+                      "type": "number",
+                      "required": "true"
                     },
                     "RESPONSECODE": {
                       "type": "number"
@@ -499,6 +504,4 @@ Your markdown content here.
     }
   }
 }
-
-
 <!-- DYNAMIC_TEMPLATE_END -->
