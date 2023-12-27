@@ -9,6 +9,7 @@
   "dependencies": {
     "handlebars": "^4.7.8",
     "honkit-plugin-api-documentation": "file:honkit-plugin-api-documentation",
+    "honkit-plugin-markdown-tabs": "^0.0.1",
     "minimist": "^1.2.8",
     "neo-async": "^2.6.2",
     "source-map": "^0.6.1",
@@ -17,7 +18,7 @@
   },
   "scripts": {
     "reinstall-plugin": "rm -rf node_modules/honkit-plugin-api-documentation && npm install",
-    "build": "npm run reinstall-plugin && honkit build",
+    "build": "honkit build",
     "serve": "honkit serve"
   },
   "keywords": [],

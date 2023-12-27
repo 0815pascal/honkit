@@ -1,9 +1,9 @@
 {
-  "plugins": ["honkit-plugin-api-documentation"],
+  "plugins": ["honkit-plugin-api-documentation", "honkit-plugin-markdown-tabs"],
   "styles": {
-        "website": "styles/custom.css"
-    },
-    "variables": {
-        "baseUrl": "http://www.breadpitt.ch"
-    }
+    "website": "styles/custom.css"
+  },
+  "variables": {
+    "baseUrl": "http://www.breadpitt.ch"
   }
+}
