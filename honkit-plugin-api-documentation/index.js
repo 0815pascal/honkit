@@ -65,8 +65,8 @@ module.exports = {
   "init": function() {
   },
   'page:before': async function(page) {
-    const markerStart = '<!-- DYNAMIC_TEMPLATE_START -->';
-    const markerEnd = '<!-- DYNAMIC_TEMPLATE_END -->';
+    const markerStart = '<!-- API_START -->';
+    const markerEnd = '<!-- API_END -->';
     let content = page.content;
 
     while (content.indexOf(markerStart) !== -1) {

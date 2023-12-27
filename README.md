@@ -6,7 +6,7 @@ description: Convention
 
 Your markdown content here.
 
-<!-- DYNAMIC_TEMPLATE_START -->
+<!-- API_START -->
 {
   "swagger": "2.0",
   "info": {
@@ -504,4 +504,4 @@ Your markdown content here.
     }
   }
 }
-<!-- DYNAMIC_TEMPLATE_END -->
+<!-- API_END -->
