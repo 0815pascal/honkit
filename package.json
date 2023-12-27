@@ -24,6 +24,8 @@
   "author": "Pascal Witzig",
   "license": "ISC",
   "devDependencies": {
-    "honkit": "^5.1.1"
+    "eslint": "^8.7.0",
+    "honkit": "^5.1.1",
+    "prettier": "^2.5.1"
   }
 }
