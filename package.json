@@ -12,12 +12,12 @@
     "honkit-plugin-markdown-tabs": "^0.0.1",
     "minimist": "^1.2.8",
     "neo-async": "^2.6.2",
-    "source-map": "^0.6.1",
     "uglify-js": "^3.17.4",
     "wordwrap": "^1.0.0"
   },
   "scripts": {
-    "reinstall-plugin": "rm -rf node_modules/honkit-plugin-api-documentation && npm install",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\"",
+    "reinstall": "rm -rf node_modules/honkit-plugin-api-documentation && npm install",
     "build": "honkit build",
     "serve": "honkit serve"
   },
@@ -27,6 +27,10 @@
   "devDependencies": {
     "eslint": "^8.7.0",
     "honkit": "^5.1.1",
-    "prettier": "^2.5.1"
+    "prettier": "^3.0.3"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "tabWidth": 2
   }
 }

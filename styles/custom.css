@@ -1,15 +1,15 @@
 .content {
-    min-width: 800px;
-    margin: 0 auto;
+  min-width: 800px;
+  margin: 0 auto;
 }
 
-.markdown-section{
-	width: 100% !important;
-	border-width: 0;
+.markdown-section {
+  width: 100% !important;
+  border-width: 0;
 }
 
-.markdown-section section{
-	width: calc(100% - 2rem);
-	padding-right: 2rem;
-	font-size: 1.6rem;
+.markdown-section section {
+  width: calc(100% - 2rem);
+  padding-right: 2rem;
+  font-size: 1.6rem;
 }
